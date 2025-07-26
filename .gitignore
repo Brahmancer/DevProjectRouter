@@ -1,5 +1,12 @@
+*.db
+*.db-shm
+*.db-wal
+app.db
+app.db-shm
+app.db-wal
 bin/
 obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+.idea/*

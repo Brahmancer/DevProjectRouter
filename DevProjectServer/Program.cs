@@ -1,7 +1,20 @@
+using DevProjectServer.Data;
+using DevProjectServer.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddDefaultIdentity<UserProfile>(options => 
+        options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 
@@ -16,6 +29,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -25,5 +39,18 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.EnsureCreated();
+}
+
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Identity/Account/Login");
+    return Task.CompletedTask;
+});
 
 app.Run();
