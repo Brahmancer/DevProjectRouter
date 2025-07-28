@@ -95,7 +95,7 @@ namespace DevProjectServer.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id);
-                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                return LocalRedirect(returnUrl ?? Url.Content("~/Home"));
             }
             if (result.IsLockedOut)
             {

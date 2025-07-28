@@ -49,8 +49,19 @@ using (var scope = app.Services.CreateScope())
 
 app.MapGet("/", context =>
 {
-    context.Response.Redirect("/Identity/Account/Login");
-    return Task.CompletedTask;
+    // Check if user is authenticated
+    if (context.User.Identity?.IsAuthenticated == true)
+    {
+        // Authenticated users go to home page
+        context.Response.Redirect("/Home");
+        return Task.CompletedTask;
+    }
+    else
+    {
+        // Unauthenticated users go to login
+        context.Response.Redirect("/Identity/Account/Login");
+        return Task.CompletedTask;
+    }
 });
 
 app.Run();
