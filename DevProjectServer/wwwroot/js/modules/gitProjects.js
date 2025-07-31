@@ -54,14 +54,18 @@ class GitProjectManager {
         };
 
         try {
+            console.log("Formdata: " + formData);
+            console.log("Formdata stringify: " + JSON.stringify(formData));
+            debugger;
             const response = await $.ajax({
                 url: '/GitProject/Create',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(formData),
-                headers: {
-                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                }
+                data: JSON.stringify(formData)
+                // data: JSON.stringify(formData),
+                // headers: {
+                //     'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                // }
             });
 
             if (response.success) {

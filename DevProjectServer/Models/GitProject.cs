@@ -15,7 +15,7 @@ public class GitProject
     public string? ReadmeHtml { get; set; } // Optionally cache the rendered README
     
     // Foreign key to UserProfile
-    public required string UserProfileId { get; set; } // Foreign key
+    public string? UserProfileId { get; set; } // Foreign key
     
     public UserProfile? UserProfile { get; set; } // Navigation property
 }

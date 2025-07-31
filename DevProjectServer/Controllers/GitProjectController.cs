@@ -20,7 +20,6 @@ public class GitProjectController(
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([FromBody] GitProject gitProject)
     {
         // Set the current user as the owner
