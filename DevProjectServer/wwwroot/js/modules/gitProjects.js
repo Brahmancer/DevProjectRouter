@@ -2,6 +2,7 @@ class GitProjectManager {
     constructor () {
         this.modalId = '#createProjectModal';
         this.initializeEventListeners();
+        this.loadProjects(); // Load projects on page load
     }
     
     initializeEventListeners () {
@@ -14,6 +15,22 @@ class GitProjectManager {
         $(document).on('submit', '#createProjectForm', (e) => {
             e.preventDefault();
             this.handleFormSubmission();
+        });
+
+        // GitHub connection
+        $(document).on('click', '#connectGitHubBtn', () => {
+            window.location.href = '/GitHub/Connect';
+        });
+
+        // Sync repositories
+        $(document).on('click', '#syncRepositoriesBtn', () => {
+            this.syncRepositories();
+        });
+
+        // Load README
+        $(document).on('click', '.load-readme-btn', (e) => {
+            const projectId = $(e.target).data('project-id');
+            this.loadReadme(projectId);
         });
     }
     
@@ -60,6 +77,44 @@ class GitProjectManager {
         }
     }
 
+    async syncRepositories() {
+        try {
+            const response = await $.ajax({
+                url: '/GitHub/SyncRepositories',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                }
+            });
+
+            if (response.success) {
+                this.showAlert('success', response.message);
+                this.loadProjects();
+                $('#syncRepositoriesBtn').show();
+            } else {
+                this.showAlert('danger', response.message);
+            }
+        } catch (error) {
+            this.showAlert('danger', 'An error occurred while syncing repositories.');
+        }
+    }
+
+    async loadReadme(projectId) {
+        try {
+            const response = await $.get(`/GitHub/GetReadme?projectId=${projectId}`);
+            
+            if (response.success) {
+                $(`#readme-${projectId}`).html(response.html);
+                $(`#readme-${projectId}`).show();
+                $(`.load-readme-btn[data-project-id="${projectId}"]`).hide();
+            } else {
+                this.showAlert('warning', response.message);
+            }
+        } catch (error) {
+            this.showAlert('danger', 'An error occurred while loading README.');
+        }
+    }
+
     showAlert(type, message) {
         const alertHtml = `
             <div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -74,11 +129,20 @@ class GitProjectManager {
         }, 5000);
     }
 
-    loadProjects() {
-        // TODO: Implement project loading
-        console.log('Loading projects...');
-    }
-    
+    async loadProjects() {
+        try {
+            const response = await $.get('/GitProject/GetUserProjectsHtml');
+            $('#projectsContainer').html(response);
+            
+            // Show sync button if projects exist
+            if ($('.project-card').length > 0) {
+                $('#syncRepositoriesBtn').show();
+            }
+        } catch (error) {
+            console.error('Failed to load projects');
+            this.showAlert('danger', 'Error loading projects');
+        }
+    }    
 }
 
 // Initialize when document is ready

@@ -1,0 +1,17 @@
+@model IEnumerable<DevProjectServer.Models.GitProject>
+
+@if (!Model.Any())
+{
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No projects yet. Click "Add Project" to get started!
+        </div>
+    </div>
+}
+else
+{
+    @foreach (var project in Model)
+    {
+        <partial name="_ProjectCard" model="project"/>
+    }
+}

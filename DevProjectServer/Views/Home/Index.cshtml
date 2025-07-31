@@ -2,15 +2,30 @@
     ViewData["Title"] = "Home Page";
 }
 
-
 <div class="container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>My GitHub Projects</h1>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
-                    <i class="bi bi-plus-circle"></i> Add Project
-                </button>
+                <div>
+                    <button type="button" class="btn btn-outline-primary me-2" id="connectGitHubBtn">
+                        <i class="bi bi-github"></i> Connect GitHub
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary me-2" id="syncRepositoriesBtn" style="display: none;">
+                        <i class="bi bi-arrow-clockwise"></i> Sync Repositories
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                        <i class="bi bi-plus-circle"></i> Add Project
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -18,7 +33,7 @@
     <div class="row" id="projectsContainer">
         <div class="col-12">
             <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i> No projects yet. Click "Add Project" to get started!
+                <i class="bi bi-info-circle"></i> No projects yet. Connect your GitHub account or click "Add Project" to get started!
             </div>
         </div>
     </div>

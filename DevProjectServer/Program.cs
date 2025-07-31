@@ -1,5 +1,6 @@
 using DevProjectServer.Data;
 using DevProjectServer.Models;
+using DevProjectServer.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -15,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDefaultIdentity<UserProfile>(options => 
         options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Add GitHub service
+builder.Services.AddHttpClient<IGitHubService, GitHubService>();
 
 var app = builder.Build();
 

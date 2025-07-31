@@ -1,0 +1,37 @@
+@model DevProjectServer.Models.GitProject
+
+<div class="col-md-6 col-lg-4 mb-4">
+    <div class="card h-100 project-card">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@(Model.Description ?? "No description available")</p>
+            
+            <div class="btn-group-vertical w-100" role="group">
+                <a href="@Model.RepoUrl" target="_blank" class="btn btn-primary btn-sm mb-2">
+                    <i class="bi bi-github"></i> View Repository
+                </a>
+                <button type="button" class="btn btn-outline-secondary btn-sm load-readme-btn" data-project-id="@Model.Id">
+                    <i class="bi bi-file-text"></i> Load README
+                </button>
+            </div>
+            
+            <div id="readme-@Model.Id" class="mt-3" style="display: none;">
+                <hr>
+                <h6>README</h6>
+                <div class="readme-content">
+                    @if (!string.IsNullOrEmpty(Model.ReadmeHtml))
+                    {
+                        @Html.Raw(Model.ReadmeHtml)
+                    }
+                    else
+                    {
+                        <div class="text-muted">Loading README...</div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <small>Added recently</small>
+        </div>
+    </div>
+</div>
